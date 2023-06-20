@@ -53,12 +53,24 @@ class Game:
         for event in pg.event.get():
             if event.type == pg.QUIT or event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 pg.quit()
+
+                pr.disable()
+                s = io.StringIO()
+                sortby = 'tottime' #'cumulative' #SortKey.CUMULATIVE
+                with open('stats.log', 'w') as s:
+                    ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+                    ps.print_stats()
+
                 sys.exit()
             if event.type == pg.KEYDOWN and event.key == pg.K_m:
                 self.show_map = not self.show_map
 
 
 if __name__ == '__main__':
+    import cProfile, pstats, io
+    pr = cProfile.Profile()
+    pr.enable()
+
     game = Game()
     game.run()
 
