@@ -1,0 +1,9 @@
+raycasting, no textures
+plain Python: avg 21 FPS
+Cython raycasting.pyx: avg 47 FPS
+Cython with cdef class: avg 49 FPS
+Numba: doesn't work
+
+raycasting, with textures
+plain Python: avg 14 FPS
+Cython: avg 26 FPS

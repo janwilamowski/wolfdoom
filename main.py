@@ -22,6 +22,7 @@ class Game:
         self.object_renderer = ObjectRenderer(self)
         self.raycasting = RayCasting(self)
         self.show_map = False
+        self.fps_stats = []
 
 
     def run(self):
@@ -39,7 +40,9 @@ class Game:
         self.raycasting.update()
         pg.display.flip()
         self.dt = self.clock.tick(FPS)
-        pg.display.set_caption(f'{self.clock.get_fps():.1f}')
+        fps = self.clock.get_fps()
+        self.fps_stats.append(fps)
+        pg.display.set_caption(f'{fps:.1f}')
 
 
     def draw(self):
@@ -62,7 +65,7 @@ class Game:
                 with open('stats.log', 'w') as s:
                     ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
                     ps.print_stats()
-
+                print(f'avg FPS: {sum(self.fps_stats) / len(self.fps_stats):.2f}')
                 sys.exit()
             if event.type == pg.KEYDOWN and event.key == pg.K_m:
                 self.show_map = not self.show_map
