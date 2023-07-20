@@ -25,23 +25,35 @@ cdef class RayCasting:
             int ray = 0
             int scale = SCALE
             int texture_size = TEXTURE_SIZE
+            int half_texture_size = HALF_TEXTURE_SIZE
+            int height = HEIGHT
             int half_height = HALF_HEIGHT
             int texture
             int zero = 0
             int one = 1
             int two = 2
-            double depth, proj_height, offset
+            double depth, proj_height, offset, texture_height
             object wall_column
             tuple wall_pos, scale_params, result
 
         for values in self.raycasting_result:
             depth, proj_height, texture, offset = values
-            wall_column = self.textures[texture].subsurface(
-                offset * (texture_size - scale), zero, scale, texture_size
-            )
-            scale_params = (scale, proj_height)
+            if proj_height < height:
+                wall_column = self.textures[texture].subsurface(
+                    offset * (texture_size - scale), zero, scale, texture_size
+                )
+                scale_params = (scale, proj_height)
+                wall_pos = (ray * scale, half_height - proj_height // two)
+            else:
+                texture_height = texture_size * height / proj_height
+                wall_column = self.textures[texture].subsurface(
+                    offset * (texture_size - scale), half_texture_size - texture_height / two,
+                    scale,texture_height
+                )
+                scale_params = (scale, height)
+                wall_pos = (ray * scale, zero)
+
             wall_column = pg.transform.scale(wall_column, scale_params)
-            wall_pos = (ray * scale, half_height - proj_height // two)
             result = (depth, wall_column, wall_pos)
             self.objects_to_render.append(result)
             ray += one
