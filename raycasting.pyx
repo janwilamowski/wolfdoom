@@ -5,6 +5,20 @@ from libc.math cimport cos
 import pygame as pg
 from settings import *
 
+# global constants
+cdef:
+    int scale = SCALE
+    int texture_size = TEXTURE_SIZE
+    int half_texture_size = HALF_TEXTURE_SIZE
+    int height = HEIGHT
+    int half_height = HALF_HEIGHT
+    int screen_dist = SCREEN_DIST
+    int nrays = NUM_RAYS
+    int max_depth = MAX_DEPTH
+    int tile_size = TILE_SIZE
+    double delta_angle = DELTA_ANGLE
+    double half_fov = HALF_FOV
+
 
 cdef class RayCasting:
 
@@ -24,11 +38,6 @@ cdef class RayCasting:
         self.objects_to_render = []
         cdef:
             int ray = 0
-            int scale = SCALE
-            int texture_size = TEXTURE_SIZE
-            int half_texture_size = HALF_TEXTURE_SIZE
-            int height = HEIGHT
-            int half_height = HALF_HEIGHT
             int texture
             int zero = 0
             int one = 1
@@ -63,27 +72,18 @@ cdef class RayCasting:
             ray += one
 
 
-    # def raycast(self):
     cdef void raycast(RayCasting self, double ox, double oy, double x_map, double y_map, double player_angle):
-        cdef int nrays, ray, max_depth, tile_size, scale, screen_dist, half_height, two, three
-        cdef double ray_angle, sin_a, cos_a, dx, dy, delta_angle, half_fov#, ox, oy
-        cdef double y_hor, x_hor, x_vert, y_vert, offset#, x_map, y_map, player_angle
-        cdef double delta_depth, depth_hor, depth_vert, depth, proj_height
-        cdef double one, zero, minus_one, millionth, eps
-        cdef tuple result
-        cdef object texture, texture_vert, texture_hor
-        cdef (int, int) tile_hor, tile_vert
-        cdef (double, double) line_start, line_end
+        cdef:
+            int ray, scale, two, three
+            double ray_angle, sin_a, cos_a, dx, dy
+            double y_hor, x_hor, x_vert, y_vert, offset
+            double delta_depth, depth_hor, depth_vert, depth, proj_height
+            double one, zero, minus_one, millionth, eps
+            tuple result
+            object texture, texture_vert, texture_hor
+            (int, int) tile_hor, tile_vert
+            (double, double) line_start, line_end
 
-        nrays = NUM_RAYS
-        max_depth = MAX_DEPTH
-        tile_size = TILE_SIZE
-        scale = SCALE
-        screen_dist = SCREEN_DIST
-        half_height = HALF_HEIGHT
-        delta_angle = DELTA_ANGLE
-        half_fov = HALF_FOV
-        # player_angle = self.game.player.angle
         minus_one = -1
         zero = 0
         one = 1
@@ -91,9 +91,6 @@ cdef class RayCasting:
         three = 3
         eps = 0.0001
         millionth = 1e-6
-
-        # ox, oy = self.game.player.pos
-        # x_map, y_map = self.game.player.map_pos
 
         self.raycasting_result = [] #.clear()
         ray_angle = player_angle - half_fov + eps
