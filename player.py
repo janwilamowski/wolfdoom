@@ -48,9 +48,10 @@ class Player:
 
 
     def check_wall_collision(self, dx, dy):
-        if self.check_wall(self.x + dx, self.y):
+        scale = PLAYER_SIZE_SCALE / self.game.dt
+        if self.check_wall(self.x + dx * scale, self.y):
             self.x += dx
-        if self.check_wall(self.x, self.y + dy):
+        if self.check_wall(self.x, self.y + dy * scale):
             self.y += dy
 
 
