@@ -5,6 +5,7 @@ from libc.math cimport cos
 import pygame as pg
 from settings import *
 
+
 cdef class RayCasting:
 
     cdef public list objects_to_render
@@ -34,7 +35,10 @@ cdef class RayCasting:
             int two = 2
             double depth, proj_height, offset, texture_height
             object wall_column
-            tuple wall_pos, scale_params, result
+            tuple result
+            (int, double) scale_params
+            (double, double) wall_pos
+            (double, double, int, double) values
 
         for values in self.raycasting_result:
             depth, proj_height, texture, offset = values
@@ -66,8 +70,10 @@ cdef class RayCasting:
         cdef double y_hor, x_hor, x_vert, y_vert, offset#, x_map, y_map, player_angle
         cdef double delta_depth, depth_hor, depth_vert, depth, proj_height
         cdef double one, zero, minus_one, millionth, eps
-        cdef tuple tile_hor, tile_vert, result, line_start, line_end
+        cdef tuple result
         cdef object texture, texture_vert, texture_hor
+        cdef (int, int) tile_hor, tile_vert
+        cdef (double, double) line_start, line_end
 
         nrays = NUM_RAYS
         max_depth = MAX_DEPTH
@@ -89,7 +95,7 @@ cdef class RayCasting:
         # ox, oy = self.game.player.pos
         # x_map, y_map = self.game.player.map_pos
 
-        self.raycasting_result.clear()
+        self.raycasting_result = [] #.clear()
         ray_angle = player_angle - half_fov + eps
         for ray in range(nrays):
             sin_a = sin(ray_angle)
