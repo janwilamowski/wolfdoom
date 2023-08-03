@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import sys
@@ -23,6 +25,7 @@ class Game:
         self.raycasting = RayCasting(self)
         self.show_map = False
         self.fps_stats = []
+        pg.mouse.set_visible(False)
 
 
     def run(self):

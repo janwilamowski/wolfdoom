@@ -9,7 +9,6 @@ class Player:
         self.x, self.y = pos
         self.angle = PLAYER_ANGLE
 
-
     def move(self):
         sin_a = math.sin(self.angle)
         cos_a = math.cos(self.angle)
@@ -40,10 +39,10 @@ class Player:
         # self.y += dy
         self.check_wall_collision(dx, dy)
 
-        if keys[pg.K_RIGHT]:
-            self.angle += PLAYER_ROT_SPEED * self.game.dt
-        if keys[pg.K_LEFT]:
-            self.angle -= PLAYER_ROT_SPEED * self.game.dt
+        # if keys[pg.K_RIGHT]:
+        #     self.angle += PLAYER_ROT_SPEED * self.game.dt
+        # if keys[pg.K_LEFT]:
+        #     self.angle -= PLAYER_ROT_SPEED * self.game.dt
         self.angle %= math.tau
 
 
@@ -61,6 +60,16 @@ class Player:
 
     def update(self):
         self.move()
+        self.mouse_control()
+
+
+    def mouse_control(self):
+        mx, my = pg.mouse.get_pos()
+        if mx < MOUSE_BORDER_LEFT or mx > MOUSE_BORDER_RIGHT:
+            pg.mouse.set_pos((HALF_WIDTH, HALF_HEIGHT))
+        self.rel = pg.mouse.get_rel()[0]
+        self.rel = max(-MOUSE_MAX_REL, min(MOUSE_MAX_REL, self.rel))
+        self.angle += self.rel * MOUSE_SENSITIVITY * self.game.dt
 
 
     @property
