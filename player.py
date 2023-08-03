@@ -14,11 +14,15 @@ class Player:
         sin_a = math.sin(self.angle)
         cos_a = math.cos(self.angle)
         dx, dy = 0, 0
+        keys = pg.key.get_pressed()
+
         speed = PLAYER_SPEED * self.game.dt
+        if keys[pg.K_LSHIFT]:
+            speed *= 2
+
         speed_sin = speed * sin_a
         speed_cos = speed * cos_a
 
-        keys = pg.key.get_pressed()
         if keys[pg.K_w]:
             dx += speed_cos
             dy += speed_sin
